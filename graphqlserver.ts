@@ -1,4 +1,5 @@
 import { ApolloGateway } from '@apollo/gateway';
+import { GraphQLRequestContext } from '@apollo/server';
 import { ApolloServer } from 'apollo-server';
 import { parse } from 'graphql';
 
@@ -9,19 +10,21 @@ async function startServer() {
 
   const server = new ApolloServer({
     gateway,
-    subscriptions: false,
     plugins: [
       {
-        requestDidStart() {
+        async requestDidStart(): Promise<any> {
           const requestStartDate = new Date().getTime();
           return {
-            willSendResponse(requestContext) {
+            async willSendResponse(
+              requestContext: GraphQLRequestContext<any>,
+            ): Promise<void> {
               if (
                 requestContext.request.query.startsWith(
                   '\n    query IntrospectionQuery',
                 )
               )
                 return;
+
               const ast = parse(requestContext.request.query);
               const definition: any = ast.definitions[0];
               const selectionSet = definition.selectionSet.selections[0];

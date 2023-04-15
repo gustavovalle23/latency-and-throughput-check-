@@ -2,18 +2,6 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { parse, DocumentNode } from 'graphql';
 
-// function getFieldNames(selectionSet: any) {
-//   return selectionSet.selections
-//     .map((selection: any) => {
-//       if (selection.kind === 'Field' && selection.name.value !== '__schema') {
-//         return selection.name.value;
-//       } else if (selection.selectionSet) {
-//         return getFieldNames(selection.selectionSet);
-//       }
-//     })
-//     .flat();
-// }
-
 @Injectable()
 export class LatencyMiddleware implements NestMiddleware {
   private readonly logger = new Logger(LatencyMiddleware.name);
